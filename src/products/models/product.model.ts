@@ -1,16 +1,16 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { OrderStatus } from '../common/enums/order-status.enum';
 
 @ObjectType()
-export class Order {
+export class Product {
   @Field(() => Int)
   public id: number;
 
-  public customerId: number;
+  @Field()
+  public name: string;
 
   @Field()
-  public status: OrderStatus;
+  public description: string;
 
-  @Field()
-  public createdAt: Date;
+  @Field(() => Int)
+  public price: number;
 }

@@ -1,10 +1,11 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { ArgsType, Field, Int } from '@nestjs/graphql';
+import { OrderStatus } from '../common/enums/order-status.enum';
 
 @ArgsType()
-export class GetCustomersArgsDto {
-  @Field({ nullable: true })
-  public firstName?: string;
+export class UpdateOrderArgsDto {
+  @Field(() => Int)
+  public id: number;
 
-  @Field({ nullable: true })
-  public lastName?: string;
+  @Field(() => OrderStatus)
+  public status: OrderStatus;
 }

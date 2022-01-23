@@ -1,49 +1,22 @@
-import { Order } from '../../models/order.model';
-import { OrderStatus } from '../enums/order-status.enum';
+import { Product } from '../../models/product.model';
 
-export const ordersData: Order[] = [
+export const productsData: Product[] = [
   {
     id: 1,
-    customerId: 1,
-    status: OrderStatus.ACTIVE,
-    createdAt: new Date(),
-    products: [],
+    name: 'Pen BIC',
+    description: 'Great pen - description',
+    price: 10,
   },
   {
     id: 2,
-    customerId: 2,
-    status: OrderStatus.DELIVERED,
-    createdAt: new Date(),
-    products: [],
+    name: 'Book',
+    description: 'Great book - description',
+    price: 70,
   },
   {
     id: 3,
-    customerId: 1,
-    status: OrderStatus.CANCELLED,
-    createdAt: new Date(),
-    products: [],
-  },
-];
-
-const ordersProductsData = [
-  {
-    id: 1,
-    orderId: 1,
-    productId: 1,
-  },
-  {
-    id: 2,
-    orderId: 1,
-    productId: 2,
-  },
-  {
-    id: 3,
-    orderId: 2,
-    productId: 1,
-  },
-  {
-    id: 4,
-    orderId: 3,
-    productId: 1,
+    name: 'Macbook',
+    description: 'Great macbook - description',
+    price: 12000,
   },
 ];

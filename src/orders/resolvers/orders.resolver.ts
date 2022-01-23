@@ -1,45 +1,45 @@
 import {
   Args,
-  Int,
+  Mutation,
   Parent,
   Query,
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { Customer } from '../models/customer.model';
 import { Inject } from '@nestjs/common';
-import {
-  CustomersService,
-  CustomersServiceInterface,
-} from '../services/customers.service';
+import { Order } from '../models/order.model';
 import {
   OrdersService,
   OrdersServiceInterface,
-} from '../../orders/services/orders.service';
-import { GetCustomersArgsDto } from '../dto/get-customers-args.dto';
-import { Order } from '../../orders/models/order.model';
+} from '../services/orders.service';
+import { Product } from '../../products/models/product.model';
+import {
+  OrdersProductsService,
+  OrdersProductsServiceInterface,
+} from '../services/orders-products.service';
+import { UpdateOrderArgsDto } from '../dto/update-order-args.dto';
 
-@Resolver(() => Customer)
-export class CustomersResolver {
+@Resolver(() => Order)
+export class OrdersResolver {
   constructor(
-    @Inject(CustomersService)
-    private readonly customerService: CustomersServiceInterface,
     @Inject(OrdersService)
     private readonly ordersService: OrdersServiceInterface,
+    @Inject(OrdersProductsService)
+    private readonly ordersProductsService: OrdersProductsServiceInterface,
   ) {}
 
-  @Query(() => [Customer], { name: 'customers' })
-  public getCustomers(@Args() args: GetCustomersArgsDto) {
-    return this.customerService.find(args);
+  @Query(() => [Order], { name: 'orders' })
+  public getOrders(): Order[] {
+    return this.ordersService.find();
   }
 
-  @Query(() => Customer, { name: 'customer' })
-  public getCustomer(@Args('id', { type: () => Int }) id: number) {
-    return this.customerService.findOneById(id);
+  @Mutation(() => Order)
+  public updateOrderStatus(@Args() args: UpdateOrderArgsDto): Order {
+    return this.ordersService.updateStatus(args);
   }
 
-  @ResolveField('orders', () => [Order])
-  public getOrders(@Parent() customer: Customer) {
-    return this.ordersService.findByCustomerId(customer.id);
+  @ResolveField('products', () => [Product])
+  public getProducts(@Parent() order: Order): Product[] {
+    return this.ordersProductsService.getProductsByOrderId(order.id);
   }
 }

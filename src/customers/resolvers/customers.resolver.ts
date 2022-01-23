@@ -9,22 +9,37 @@ import {
 import { Customer } from '../models/customer.model';
 import { Inject } from '@nestjs/common';
 import {
-  CustomerService,
-  CustomerServiceInterface,
-} from '../services/customer.service';
+  CustomersService,
+  CustomersServiceInterface,
+} from '../services/customers.service';
+import {
+  OrdersService,
+  OrdersServiceInterface,
+} from '../../orders/services/orders.service';
+import { GetCustomersArgsDto } from '../dto/get-customers-args.dto';
+import { Order } from '../../orders/models/order.model';
 
 @Resolver(() => Customer)
-export class CustomerResolver {
+export class CustomersResolver {
   constructor(
-    @Inject(CustomerService)
-    private readonly customerService: CustomerServiceInterface,
+    @Inject(CustomersService)
+    private readonly customerService: CustomersServiceInterface,
+    @Inject(OrdersService)
+    private readonly ordersService: OrdersServiceInterface,
   ) {}
 
-  @Query(() => Customer)
-  public customer(@Args('id', { type: () => Int }) id: number) {
+  @Query(() => [Customer], { name: 'customers' })
+  public getCustomers(@Args() args: GetCustomersArgsDto) {
+    return this.customerService.find(args);
+  }
+
+  @Query(() => Customer, { name: 'customer' })
+  public getCustomer(@Args('id', { type: () => Int }) id: number) {
     return this.customerService.findOneById(id);
   }
 
-  @ResolveField()
-  public orders(@Parent() customer: Customer) {}
+  @ResolveField('orders', () => [Order])
+  public getOrders(@Parent() customer: Customer) {
+    return this.ordersService.findByCustomerId(customer.id);
+  }
 }
